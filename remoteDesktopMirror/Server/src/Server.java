@@ -1,8 +1,13 @@
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import javax.imageio.ImageIO;
+
 
 public class Server {
     public static String DEFAULT_IP = "127.0.0.1";
@@ -65,6 +70,27 @@ public class Server {
         finally{
             System.out.println("Server closed");
             System.exit(0);
+        }
+    }
+
+    public void work(){
+        while(true){
+            try {
+                // receiving byte byte array and its size of BufferedImage
+                int imageLength = this._in.readInt();
+                byte[] imageBytes = new byte[imageLength];
+
+                this._in.readFully(imageBytes);
+                ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
+                BufferedImage screenCapture = ImageIO.read(bais);
+
+                // repaint the frame with the new captured screen
+                this._frameHandler.repaint(screenCapture);
+                this._out.writeUTF("ok");
+            } catch (IOException e) {
+                System.out.println("Closed connection with the client");
+                System.exit(0);
+            }
         }
     }
 }

@@ -44,7 +44,8 @@ public class FrameHandler {
         this._frame.setVisible(true);
     }
 
-    public void repaint(){
+    public void repaint(BufferedImage updatedScreenCapture){
+        this._screenCapture = updatedScreenCapture;
         this._canvas.repaint();
     }
 }
