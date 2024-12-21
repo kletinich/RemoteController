@@ -86,7 +86,9 @@ public class Server {
 
                 // repaint the frame with the new captured screen
                 this._frameHandler.repaint(screenCapture);
-                this._out.writeUTF("ok");
+
+                this._out.writeInt(this._frameHandler.getKeyCode());
+
             } catch (IOException e) {
                 System.out.println("Closed connection with the client");
                 System.exit(0);

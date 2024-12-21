@@ -19,7 +19,8 @@ public class Client {
     private DataInputStream _in;
     private DataOutputStream _out;
 
-    private ScreenCapturer screenCapturer;
+    private ScreenCapturer _screenCapturer;
+    private ServerEventsExecuter _serverEventsExecuter;
 
     public Client(){
         this(DEFAULT_IP, DEFAULT_PORT);
@@ -29,7 +30,8 @@ public class Client {
         this._ip = ip;
         this._port = port;
 
-        this.screenCapturer = new ScreenCapturer();
+        this._screenCapturer = new ScreenCapturer();
+        this._serverEventsExecuter = new ServerEventsExecuter();
     }
 
     public void connectToServer(){
@@ -51,7 +53,7 @@ public class Client {
         while(true){
             try {
                 Thread.sleep(50);
-                BufferedImage screenCapture = this.screenCapturer.captureScreen();
+                BufferedImage screenCapture = this._screenCapturer.captureScreen();
 
                 // convert BufferedImage to byte array and send to server
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -61,7 +63,11 @@ public class Client {
                 this._out.writeInt(imageBytes.length);
                 this._out.write(imageBytes);
 
-                this._in.readUTF();
+                int key = this._in.readInt();
+
+                if(key != 0){
+                    this._serverEventsExecuter.pressKey(key);
+                }
 
             } catch (IOException e) {
                 System.out.println("Closed connection with the server");
