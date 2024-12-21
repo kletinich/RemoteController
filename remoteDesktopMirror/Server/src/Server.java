@@ -1,10 +1,12 @@
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -20,7 +22,7 @@ public class Server {
     private Socket _socket;
 
     private DataInputStream _in;
-    private DataOutputStream _out;
+    private ObjectOutputStream _out;
 
     FrameHandler _frameHandler;
 
@@ -52,7 +54,7 @@ public class Server {
             System.out.println("Connected to client"); 
 
             this._in = new DataInputStream(this._socket.getInputStream());
-            this._out = new DataOutputStream(this._socket.getOutputStream());
+            this._out = new ObjectOutputStream(this._socket.getOutputStream());
 
         }catch(IOException e){
             System.err.println("Connection closed"); 
@@ -87,7 +89,8 @@ public class Server {
                 // repaint the frame with the new captured screen
                 this._frameHandler.repaint(screenCapture);
 
-                this._out.writeInt(this._frameHandler.getKeyCode());
+                TreeMap<String, Object> data = this._frameHandler.getMouseAndKeyboardData();
+                this._out.writeObject(data);
 
             } catch (IOException e) {
                 System.out.println("Closed connection with the client");

@@ -1,6 +1,4 @@
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -8,6 +6,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+
+import java.util.TreeMap;
 
 public class FrameHandler {
     private Frame _frame;
@@ -17,13 +17,19 @@ public class FrameHandler {
 
     private Server _server;
 
-    private String _text;
     private int _keyCode;
+    private Point _mousePosition;
+
+    private TreeMap<String, Object> _keyAndMouseData;
 
     public FrameHandler(Server server){
         this._server = server;
-        this._text = "";
         this._keyCode = 0;
+        this._mousePosition = new Point();
+
+        this._keyAndMouseData = new TreeMap<String,Object>();
+        this._keyAndMouseData.put("mouse", this._mousePosition);
+        this._keyAndMouseData.put("keyboard", this._keyCode);
 
         // init the components of the class
         this.initFrame();
@@ -63,7 +69,9 @@ public class FrameHandler {
 
         this._canvas.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-
+                _mousePosition.setLocation(e.getX(), e.getY());
+                _keyAndMouseData.remove("mouse");
+                _keyAndMouseData.put("mouse", _mousePosition);
             }
 
             @Override
@@ -96,7 +104,7 @@ public class FrameHandler {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                _keyCode = e.getKeyCode();
+
             }
 
             @Override
@@ -114,11 +122,15 @@ public class FrameHandler {
         this._canvas.repaint();
     }
 
-    public String getText(){
-        return this._text;
-    }
-
     public int getKeyCode(){
         return this._keyCode;
+    }
+
+    public Point getMousePosition(){
+        return this._mousePosition;
+    }
+
+    public TreeMap<String, Object> getMouseAndKeyboardData(){
+        return this._keyAndMouseData;
     }
 }

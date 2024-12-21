@@ -1,9 +1,13 @@
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -16,7 +20,7 @@ public class Client {
 
     private Socket _socket;
 
-    private DataInputStream _in;
+    private ObjectInputStream _in;
     private DataOutputStream _out;
 
     private ScreenCapturer _screenCapturer;
@@ -39,7 +43,7 @@ public class Client {
             this._socket = new Socket(this._ip, this._port);
             System.out.println("Connected to server");
 
-            this._in = new DataInputStream(this._socket.getInputStream());
+            this._in = new ObjectInputStream(this._socket.getInputStream());
             this._out = new DataOutputStream(this._socket.getOutputStream());
 
         }catch(IOException e){
@@ -63,7 +67,15 @@ public class Client {
                 this._out.writeInt(imageBytes.length);
                 this._out.write(imageBytes);
 
-                int key = this._in.readInt();
+                @SuppressWarnings("unchecked")
+                TreeMap<String, Object> serverData = new TreeMap<>();
+                try {
+                    serverData = (TreeMap<String, Object>) this._in.readObject();
+                } catch (ClassNotFoundException e) {
+                }
+
+                int key = (int) serverData.get("keyboard");
+                Point mousePosition = (Point) serverData.get("mouse");
 
                 if(key != 0){
                     this._serverEventsExecuter.pressKey(key);

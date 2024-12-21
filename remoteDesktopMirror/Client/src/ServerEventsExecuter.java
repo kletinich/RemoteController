@@ -1,8 +1,7 @@
 import java.awt.AWTException;
 import java.awt.Robot;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 public class ServerEventsExecuter {
     private Robot _robot;
 
@@ -22,5 +21,10 @@ public class ServerEventsExecuter {
 
     public void moveMouse(int x, int y){
         this._robot.mouseMove(x, y);
+    }
+
+    public void clickMouse(int x, int y){
+        this._robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+        this._robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
     }
 }
