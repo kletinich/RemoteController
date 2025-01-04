@@ -34,4 +34,9 @@ public class ServerEventsExecuter {
         this._robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         this._robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
     }
+
+    public void keyboardPress(int keyCode){
+        this._robot.keyPress(keyCode);
+        this._robot.keyRelease(keyCode);        
+    }
 }

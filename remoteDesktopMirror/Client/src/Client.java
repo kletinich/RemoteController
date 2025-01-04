@@ -75,6 +75,10 @@ public class Client {
                     this._serverEventsExecuter.clickMouse();
                 }
 
+                if(keyCode != 0){
+                    this._serverEventsExecuter.keyboardPress(keyCode);
+                }
+
             } catch (IOException e) {
                 System.out.println("Closed connection with the server");
                 System.exit(0);

@@ -97,6 +97,7 @@ public class Server {
                 Thread.sleep(20);
                 this._out.writeBoolean(this._frameHandler.inFrameBounds());
                 Thread.sleep(20);
+                //System.out.println(this._frameHandler.getKeyCode());
                 this._out.writeInt(this._frameHandler.getKeyCode());
                 Thread.sleep(20);      
 

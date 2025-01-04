@@ -24,11 +24,14 @@ public class FrameHandler {
     private boolean _click;
     private boolean _inFrameBounds;
 
+    private boolean _keyPressed;
+
     public FrameHandler(Server server){
         this._server = server;
         this._keyCode = 0;
         this._press = false;
         this._inFrameBounds = false;
+        this._keyPressed = false;
         this._mousePropotionalPosition = new TreeMap<>();
         this._mousePropotionalPosition.put("x", 0.0);
         this._mousePropotionalPosition.put("y", 0.0);
@@ -102,18 +105,20 @@ public class FrameHandler {
         this._canvas.addKeyListener(new KeyListener() {
 
             @Override
-            public void keyTyped(KeyEvent e) {
-                _keyCode = e.getKeyCode();
+            public void keyTyped(KeyEvent e) {// bug: after releasing the keyCode is always 0 no matter what
+                _keyCode = e.getKeyChar();
+                _keyPressed = true;
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {
-                _keyCode = e.getKeyCode();
+            public void keyPressed(KeyEvent e) {// bug: after releasing the keyCode is always 0 no matter what
+                _keyCode = e.getKeyChar();
+                _keyPressed = true;
             }
 
             @Override
-            public void keyReleased(KeyEvent e) {
-                _keyCode = 0;
+            public void keyReleased(KeyEvent e) { 
+                _keyPressed = false;
             }
             
         });
@@ -126,8 +131,8 @@ public class FrameHandler {
         this._canvas.repaint();
     }
 
-    public int getKeyCode(){
-        return this._keyCode;
+    public int getKeyCode(){ 
+        return this._keyPressed ? this._keyCode : 0;
     }
 
     public TreeMap<String, Double> getMousePropotionalPosition(){
