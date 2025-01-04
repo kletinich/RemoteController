@@ -1,13 +1,9 @@
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -52,7 +48,6 @@ public class Client {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public void work(){
         
         while(true){
@@ -75,10 +70,10 @@ public class Client {
                 boolean in = this._in.readBoolean();
                 int keyCode = this._in.readInt();
 
-                System.out.println(mouseX + ", " + mouseY);
-                System.out.println("press " + press);
-                System.out.println("click " + click);
-                System.out.println("in " + in);
+                if(click || press){
+                    this._serverEventsExecuter.moveMouse(mouseX, mouseY);
+                    this._serverEventsExecuter.clickMouse(mouseX, keyCode);
+                }
 
             } catch (IOException e) {
                 System.out.println("Closed connection with the server");

@@ -78,7 +78,7 @@ public class FrameHandler {
 
         this._canvas.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-                _mousePosition.setLocation(e.getX(), e.getY());
+                _mousePosition.setLocation(e.getX(), e.getY()); // to do: get propotions to the other screen
                 _click = true;
                 _keyAndMouseData.replace("mouse", _mousePosition);
                 _keyAndMouseData.replace("click", _click);
@@ -86,7 +86,7 @@ public class FrameHandler {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                _mousePosition.setLocation(e.getX(), e.getY());
+                _mousePosition.setLocation(e.getX(), e.getY()); // // to do: get propotions to the other screen
                 _press = true;
                 _keyAndMouseData.replace("mouse", _mousePosition);
                 _keyAndMouseData.replace("press", _press);
