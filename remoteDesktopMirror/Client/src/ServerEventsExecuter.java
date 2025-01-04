@@ -1,4 +1,7 @@
 import java.awt.AWTException;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -19,11 +22,15 @@ public class ServerEventsExecuter {
         System.out.println(KeyEvent.getKeyText(keyCode));
     }
 
-    public void moveMouse(int x, int y){
-        this._robot.mouseMove(x, y);
+    public void moveMouse(double xPropotionalPosition, double yPropotionalPosition){
+        GraphicsDevice screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
+        Rectangle screenRect = screen.getDefaultConfiguration().getBounds();
+        double xPosition = screenRect.getWidth() * xPropotionalPosition;
+        double yPosition = screenRect.getHeight() * yPropotionalPosition;
+        this._robot.mouseMove((int)xPosition, (int)yPosition);
     }
 
-    public void clickMouse(int x, int y){
+    public void clickMouse(){
         this._robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
         this._robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
     }

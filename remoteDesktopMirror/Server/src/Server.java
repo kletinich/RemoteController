@@ -1,4 +1,3 @@
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -6,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
@@ -89,18 +87,17 @@ public class Server {
                 // repaint the frame with the new captured screen
                 this._frameHandler.repaint(screenCapture);
 
-                TreeMap<String, Object> data = this._frameHandler.getMouseAndKeyboardData();
-                this._out.writeInt((int) ((Point)data.get("mouse")).getX());
+                this._out.writeDouble(this._frameHandler.getMousePropotionalPosition().get("x"));
                 Thread.sleep(20);
-                this._out.writeInt((int) ((Point)data.get("mouse")).getY());
+                this._out.writeDouble(this._frameHandler.getMousePropotionalPosition().get("y"));
                 Thread.sleep(20);
-                this._out.writeBoolean((boolean) data.get("press"));
+                this._out.writeBoolean(this._frameHandler.isPressed());
                 Thread.sleep(20);
-                this._out.writeBoolean((boolean) data.get("click"));
+                this._out.writeBoolean((this._frameHandler.isClicked()));
                 Thread.sleep(20);
-                this._out.writeBoolean((boolean) data.get("in"));
+                this._out.writeBoolean(this._frameHandler.inFrameBounds());
                 Thread.sleep(20);
-                this._out.writeInt((int) data.get("keyboard"));
+                this._out.writeInt(this._frameHandler.getKeyCode());
                 Thread.sleep(20);      
 
             } catch (IOException e) {

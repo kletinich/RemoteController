@@ -63,16 +63,16 @@ public class Client {
                 this._out.writeInt(imageBytes.length);
                 this._out.write(imageBytes);
 
-                int mouseX = this._in.readInt();
-                int mouseY = this._in.readInt();
+                double mousePropotionalX = this._in.readDouble();
+                double mousePropotionalY = this._in.readDouble();
                 boolean press = this._in.readBoolean();
                 boolean click = this._in.readBoolean();
                 boolean in = this._in.readBoolean();
                 int keyCode = this._in.readInt();
 
                 if(click || press){
-                    this._serverEventsExecuter.moveMouse(mouseX, mouseY);
-                    this._serverEventsExecuter.clickMouse(mouseX, keyCode);
+                    this._serverEventsExecuter.moveMouse(mousePropotionalX, mousePropotionalY);
+                    this._serverEventsExecuter.clickMouse();
                 }
 
             } catch (IOException e) {

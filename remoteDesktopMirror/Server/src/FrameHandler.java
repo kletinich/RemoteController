@@ -6,8 +6,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-
 import java.util.TreeMap;
+
 
 public class FrameHandler {
     private Frame _frame;
@@ -18,27 +18,20 @@ public class FrameHandler {
     private Server _server;
 
     private int _keyCode;
-    private Point _mousePosition;
+    TreeMap<String, Double> _mousePropotionalPosition;
 
     private boolean _press;
     private boolean _click;
-    private boolean _in;
-
-    private TreeMap<String, Object> _keyAndMouseData;
+    private boolean _inFrameBounds;
 
     public FrameHandler(Server server){
         this._server = server;
         this._keyCode = 0;
         this._press = false;
-        this._in = false;
-        this._mousePosition = new Point();
-
-        this._keyAndMouseData = new TreeMap<String,Object>();
-        this._keyAndMouseData.put("mouse", this._mousePosition);
-        this._keyAndMouseData.put("press", this._press);
-        this._keyAndMouseData.put("click", this._click);
-        this._keyAndMouseData.put("in", this._in);
-        this._keyAndMouseData.put("keyboard", this._keyCode);
+        this._inFrameBounds = false;
+        this._mousePropotionalPosition = new TreeMap<>();
+        this._mousePropotionalPosition.put("x", 0.0);
+        this._mousePropotionalPosition.put("y", 0.0);
 
         // init the components of the class
         this.initFrame();
@@ -78,41 +71,31 @@ public class FrameHandler {
 
         this._canvas.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-                _mousePosition.setLocation(e.getX(), e.getY()); // to do: get propotions to the other screen
+                _mousePropotionalPosition = calculatePropotionalPosition(e.getX(), e.getY());
                 _click = true;
-                _keyAndMouseData.replace("mouse", _mousePosition);
-                _keyAndMouseData.replace("click", _click);
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                _mousePosition.setLocation(e.getX(), e.getY()); // // to do: get propotions to the other screen
+                _mousePropotionalPosition = calculatePropotionalPosition(e.getX(), e.getY());
                 _press = true;
-                _keyAndMouseData.replace("mouse", _mousePosition);
-                _keyAndMouseData.replace("press", _press);
-
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 _press = false;
-                _keyAndMouseData.replace("press", _press);
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                _in = true;
-                _keyAndMouseData.replace("in", _in);
+                _inFrameBounds = true;
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 _press = false;
                 _click = false;
-                _in = false;
-                _keyAndMouseData.replace("in", _in);
-                _keyAndMouseData.replace("press", _press);
-                _keyAndMouseData.replace("click", _click);
+                _inFrameBounds = false;
             }
         });
 
@@ -147,13 +130,31 @@ public class FrameHandler {
         return this._keyCode;
     }
 
-    public Point getMousePosition(){
-        return this._mousePosition;
+    public TreeMap<String, Double> getMousePropotionalPosition(){
+        return this._mousePropotionalPosition;
     }
 
-    public TreeMap<String, Object> getMouseAndKeyboardData(){
-        TreeMap<String, Object> keyAndMouseDataCopy = this._keyAndMouseData;
-        this._keyAndMouseData.replace("click", false);
-        return keyAndMouseDataCopy;
+    public boolean isPressed(){
+        return this._press;
+    }
+
+    public boolean isClicked(){
+        return this._click;
+    }
+
+    public boolean inFrameBounds(){
+        return this._inFrameBounds;
+    }
+
+    // calculate the propotional x and y position inside the frame (example: (0.5, 0.5) is the center of the frame)
+    public TreeMap<String, Double> calculatePropotionalPosition(int xPosition, int yPosition){
+        double xPropotionalPosition = (double)xPosition / this._frame.getWidth();
+        double yPropotionalPosition = (double)yPosition / this._frame.getHeight();
+
+        TreeMap<String, Double> propotionalPosition = new TreeMap<>();
+        propotionalPosition.put("x", xPropotionalPosition);
+        propotionalPosition.put("y", yPropotionalPosition);
+
+        return propotionalPosition;
     }
 }
