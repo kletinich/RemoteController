@@ -20,7 +20,7 @@ public class Client {
 
     private Socket _socket;
 
-    private ObjectInputStream _in;
+    private DataInputStream _in;
     private DataOutputStream _out;
 
     private ScreenCapturer _screenCapturer;
@@ -43,7 +43,7 @@ public class Client {
             this._socket = new Socket(this._ip, this._port);
             System.out.println("Connected to server");
 
-            this._in = new ObjectInputStream(this._socket.getInputStream());
+            this._in = new DataInputStream(this._socket.getInputStream());
             this._out = new DataOutputStream(this._socket.getOutputStream());
 
         }catch(IOException e){
@@ -52,6 +52,7 @@ public class Client {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public void work(){
         
         while(true){
@@ -67,19 +68,17 @@ public class Client {
                 this._out.writeInt(imageBytes.length);
                 this._out.write(imageBytes);
 
-                @SuppressWarnings("unchecked")
-                TreeMap<String, Object> serverData = new TreeMap<>();
-                try {
-                    serverData = (TreeMap<String, Object>) this._in.readObject();
-                } catch (ClassNotFoundException e) {
-                }
+                int mouseX = this._in.readInt();
+                int mouseY = this._in.readInt();
+                boolean press = this._in.readBoolean();
+                boolean click = this._in.readBoolean();
+                boolean in = this._in.readBoolean();
+                int keyCode = this._in.readInt();
 
-                int key = (int) serverData.get("keyboard");
-                Point mousePosition = (Point) serverData.get("mouse");
-
-                if(key != 0){
-                    this._serverEventsExecuter.pressKey(key);
-                }
+                System.out.println(mouseX + ", " + mouseY);
+                System.out.println("press " + press);
+                System.out.println("click " + click);
+                System.out.println("in " + in);
 
             } catch (IOException e) {
                 System.out.println("Closed connection with the server");

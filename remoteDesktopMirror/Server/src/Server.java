@@ -1,6 +1,8 @@
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,7 +24,7 @@ public class Server {
     private Socket _socket;
 
     private DataInputStream _in;
-    private ObjectOutputStream _out;
+    private DataOutputStream _out;
 
     FrameHandler _frameHandler;
 
@@ -54,7 +56,7 @@ public class Server {
             System.out.println("Connected to client"); 
 
             this._in = new DataInputStream(this._socket.getInputStream());
-            this._out = new ObjectOutputStream(this._socket.getOutputStream());
+            this._out = new DataOutputStream(this._socket.getOutputStream());
 
         }catch(IOException e){
             System.err.println("Connection closed"); 
@@ -90,11 +92,23 @@ public class Server {
                 this._frameHandler.repaint(screenCapture);
 
                 TreeMap<String, Object> data = this._frameHandler.getMouseAndKeyboardData();
-                this._out.writeObject(data);
+                this._out.writeInt((int) ((Point)data.get("mouse")).getX());
+                Thread.sleep(20);
+                this._out.writeInt((int) ((Point)data.get("mouse")).getY());
+                Thread.sleep(20);
+                this._out.writeBoolean((boolean) data.get("press"));
+                Thread.sleep(20);
+                this._out.writeBoolean((boolean) data.get("click"));
+                Thread.sleep(20);
+                this._out.writeBoolean((boolean) data.get("in"));
+                Thread.sleep(20);
+                this._out.writeInt((int) data.get("keyboard"));
+                Thread.sleep(20);      
 
             } catch (IOException e) {
                 System.out.println("Closed connection with the client");
                 System.exit(0);
+            } catch (InterruptedException e) {
             }
         }
     }
