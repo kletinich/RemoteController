@@ -105,13 +105,13 @@ public class FrameHandler {
         this._canvas.addKeyListener(new KeyListener() {
 
             @Override
-            public void keyTyped(KeyEvent e) {// bug: after releasing the keyCode is always 0 no matter what
+            public void keyTyped(KeyEvent e) {
                 _keyCode = e.getKeyChar();
                 _keyPressed = true;
             }
 
             @Override
-            public void keyPressed(KeyEvent e) {// bug: after releasing the keyCode is always 0 no matter what
+            public void keyPressed(KeyEvent e) {
                 _keyCode = e.getKeyChar();
                 _keyPressed = true;
             }

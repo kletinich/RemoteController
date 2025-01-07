@@ -3,12 +3,14 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.imageio.ImageIO;
 
-
+//The server receives a consistant screenview from the client. 
+//The server controls the mouse and keyboard of the local client desktop.
 public class Server {
     public static String DEFAULT_IP = "127.0.0.1";
     public static int DEFAULT_PORT = 8080;
@@ -37,7 +39,8 @@ public class Server {
 
     public void startServer(){
         try {
-            this._server = new ServerSocket(this._port);
+            InetAddress bindAddress = InetAddress.getByName(this._ip);
+            this._server = new ServerSocket(this._port, 1, bindAddress);
 
             System.out.println("Server started");
             System.out.println("Waiting for client");
@@ -97,7 +100,6 @@ public class Server {
                 Thread.sleep(20);
                 this._out.writeBoolean(this._frameHandler.inFrameBounds());
                 Thread.sleep(20);
-                //System.out.println(this._frameHandler.getKeyCode());
                 this._out.writeInt(this._frameHandler.getKeyCode());
                 Thread.sleep(20);      
 

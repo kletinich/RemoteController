@@ -7,10 +7,9 @@ import java.net.Socket;
 
 import javax.imageio.ImageIO;
 
-/* 
-   The client shares a consistant screenview with a server. 
-   The server controls the mouse and keyboard of the local desktop.
-*/
+ 
+//The client shares a consistant screenview with a server. 
+//The server controls the mouse and keyboard of the local desktop.
 public class Client {
     public static String DEFAULT_IP = "127.0.0.1";
     public static int DEFAULT_PORT = 8080;
@@ -76,7 +75,7 @@ public class Client {
                 boolean mousePress = this._in.readBoolean();    // is mouse pressed in the server side       
                 boolean mouseClick = this._in.readBoolean();    // is the mouse clicked in the server side
                 boolean in = this._in.readBoolean();            // is the mouse inside the screen bounds 
-                char keyChar = this._in.readChar();             // keyboard key pressed in the server side
+                int keyCode = this._in.readInt();             // keyboard key pressed in the server side
 
                 // move and click the mouse with the given relative position in the server
                 if(in && (mouseClick || mousePress)){
@@ -85,8 +84,8 @@ public class Client {
                 }
 
                 // press the keyboard key with the given key pressed in the server
-                if(keyChar != 0){
-                    this._serverEventsExecuter.keyboardPress(keyChar);
+                if(keyCode != 0){
+                    this._serverEventsExecuter.keyboardPress(keyCode);
                 }
 
             } catch (IOException e) {

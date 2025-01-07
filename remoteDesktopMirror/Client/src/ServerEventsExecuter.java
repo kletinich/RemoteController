@@ -36,8 +36,8 @@ public class ServerEventsExecuter {
     }
 
     // keyboard key press
-    public void keyboardPress(char keyChar){
-        this._robot.keyPress(keyChar);
-        this._robot.keyRelease(keyChar);        
+    public void keyboardPress(int keyCode){
+        this._robot.keyPress(keyCode);
+        this._robot.keyRelease(keyCode);        
     }
 }
