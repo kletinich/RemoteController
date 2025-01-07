@@ -27,11 +27,15 @@ public class Client {
     private ScreenCapturer _screenCapturer;             // Screenshot of the screen
     private ServerEventsExecuter _serverEventsExecuter; // Executer of server commands
 
+    private boolean _isConnected;
+
     public Client(){
         this(DEFAULT_IP, DEFAULT_PORT);
     }
 
     public Client(String ip, int port){
+        this._isConnected = false;
+
         this._ip = ip;
         this._port = port;
 
@@ -47,20 +51,24 @@ public class Client {
             this._socket = new Socket(this._ip, this._port);
             System.out.println("Connected to server");
 
+            this._isConnected = true;
+
             this._in = new DataInputStream(this._socket.getInputStream());
             this._out = new DataOutputStream(this._socket.getOutputStream());
 
         }catch(IOException e){
             System.err.println("Can't connect to server");
-            //System.exit(1);
+            this._isConnected = false;
         }
     }
 
     // communicate with the server
     public void work(){
-        this._loginFrame.toggleFrameVisibility(false);
+        if(this._isConnected){
+            this._loginFrame.toggleFrameVisibility(false);
+        }
 
-        while(true){
+        while(this._isConnected){
             try {
                 Thread.sleep(50);
 
@@ -91,12 +99,14 @@ public class Client {
 
                 // press the keyboard key with the given key pressed in the server
                 if(keyCode != 0){
-                    this._serverEventsExecuter.keyboardPress(keyCode);
+                      this._serverEventsExecuter.keyboardPress(keyCode);
                 }
 
             } catch (IOException e) {
                 System.out.println("Closed connection with the server");
-                System.exit(0);
+                this._loginFrame.toggleFrameVisibility(true);
+                this._isConnected = false;
+
             } catch (InterruptedException e) {
                 System.err.println("Thread sleep error");
                 System.exit(1);
@@ -110,5 +120,9 @@ public class Client {
 
     public void setPort(int port){
         this._port = port;
+    }
+
+    public boolean _isConnected(){
+        return this._isConnected;
     }
 }

@@ -15,6 +15,8 @@ public class LoginFrame {
     private Label _ipErrorLabel;
     private Label _portErrorLabel;
 
+    private Label _connectionLabel;
+
     private TextField _ipTextField;
     private TextField _portTextField;
 
@@ -67,11 +69,17 @@ public class LoginFrame {
         this._ipErrorLabel.setForeground(Color.red);
         this._portErrorLabel.setForeground(Color.red);
 
+        this._connectionLabel = new Label();
+        this._connectionLabel.setBounds(200, 150, 200, 20);
+        this._connectionLabel.setForeground(Color.red);
+
         this._loginFrame.add(this._ipLabel);
         this._loginFrame.add(this._portLabel);
 
         this._loginFrame.add(this._ipErrorLabel);
         this._loginFrame.add(this._portErrorLabel);
+
+        this._loginFrame.add(this._connectionLabel);
     }
 
     public void initTextFields(){
@@ -87,7 +95,7 @@ public class LoginFrame {
 
     public void initButton(){
         this._confirmButton = new Button("Confirm");
-        this._confirmButton.setBounds(160, 150, 100, 20);
+        this._confirmButton.setBounds(40, 150, 100, 20);
 
         this._confirmButton.addActionListener(new ActionListener() {
 
@@ -133,7 +141,16 @@ public class LoginFrame {
                     _client.setPort(_portValue);
 
                     _client.connectToServer();
-                    _client.work();
+                    _connectionLabel.setText("Trying to connect to the server");
+
+                    if(_client._isConnected()){
+                        _connectionLabel.setText("");
+                        _client.work();
+                    }
+
+                    else{
+                        _connectionLabel.setText("Can't connect to the server");
+                    }
 
                 }
             }
