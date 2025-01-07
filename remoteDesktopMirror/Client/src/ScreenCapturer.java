@@ -3,16 +3,16 @@ import java.awt.image.BufferedImage;
 
 // This class captures screenshots
 public class ScreenCapturer {
-    private Robot robot;
+    private Robot _robot;
 
-    private GraphicsDevice screen;
-    private Rectangle screenRect;
+    private GraphicsDevice _screen;
+    private Rectangle _screenRect;
 
     public ScreenCapturer(){        
         try {
-            this.screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
-            this.robot = new Robot(this.screen);
-            this.screenRect = screen.getDefaultConfiguration().getBounds();
+            this._screen = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
+            this._robot = new Robot(this._screen);
+            this._screenRect = this._screen.getDefaultConfiguration().getBounds();
 
         } catch (AWTException e) {
             System.err.println("Error while initializing screen capture proccess.");
@@ -21,6 +21,6 @@ public class ScreenCapturer {
     }
 
     public BufferedImage captureScreen(){
-        return this.robot.createScreenCapture(this.screenRect);
+        return this._robot.createScreenCapture(this._screenRect);
     }
 }

@@ -7,6 +7,10 @@ import java.net.Socket;
 
 import javax.imageio.ImageIO;
 
+/* 
+   The client shares a consistant screenview with a server. 
+   The server controls the mouse and keyboard of the local desktop.
+*/
 public class Client {
     public static String DEFAULT_IP = "127.0.0.1";
     public static int DEFAULT_PORT = 8080;
@@ -16,11 +20,11 @@ public class Client {
 
     private Socket _socket;
 
-    private DataInputStream _in;
-    private DataOutputStream _out;
+    private DataOutputStream _out;                      // Sender of data to server
+    private DataInputStream _in;                        // Receiver of server data
 
-    private ScreenCapturer _screenCapturer;
-    private ServerEventsExecuter _serverEventsExecuter;
+    private ScreenCapturer _screenCapturer;             // Screenshot of the screen
+    private ServerEventsExecuter _serverEventsExecuter; // Executer of server commands
 
     public Client(){
         this(DEFAULT_IP, DEFAULT_PORT);
@@ -34,6 +38,7 @@ public class Client {
         this._serverEventsExecuter = new ServerEventsExecuter();
     }
 
+    // connect to server
     public void connectToServer(){
         try{
             this._socket = new Socket(this._ip, this._port);
@@ -48,11 +53,14 @@ public class Client {
         }
     }
 
+    // communicate with the server
     public void work(){
         
         while(true){
             try {
                 Thread.sleep(50);
+
+                // capture the current screen status
                 BufferedImage screenCapture = this._screenCapturer.captureScreen();
 
                 // convert BufferedImage to byte array and send to server
@@ -63,27 +71,30 @@ public class Client {
                 this._out.writeInt(imageBytes.length);
                 this._out.write(imageBytes);
 
-                double mousePropotionalX = this._in.readDouble();
-                double mousePropotionalY = this._in.readDouble();
-                boolean press = this._in.readBoolean();
-                boolean click = this._in.readBoolean();
-                boolean in = this._in.readBoolean();
-                int keyCode = this._in.readInt();
+                double mouseRelativeX = this._in.readDouble();  // relative x position of the mouse
+                double mouseRelativeY = this._in.readDouble();  // relative y position of the mouse
+                boolean mousePress = this._in.readBoolean();    // is mouse pressed in the server side       
+                boolean mouseClick = this._in.readBoolean();    // is the mouse clicked in the server side
+                boolean in = this._in.readBoolean();            // is the mouse inside the screen bounds 
+                char keyChar = this._in.readChar();             // keyboard key pressed in the server side
 
-                if(click || press){
-                    this._serverEventsExecuter.moveMouse(mousePropotionalX, mousePropotionalY);
+                // move and click the mouse with the given relative position in the server
+                if(in && (mouseClick || mousePress)){
+                    this._serverEventsExecuter.moveMouse(mouseRelativeX, mouseRelativeY);
                     this._serverEventsExecuter.clickMouse();
                 }
 
-                if(keyCode != 0){
-                    this._serverEventsExecuter.keyboardPress(keyCode);
+                // press the keyboard key with the given key pressed in the server
+                if(keyChar != 0){
+                    this._serverEventsExecuter.keyboardPress(keyChar);
                 }
 
             } catch (IOException e) {
                 System.out.println("Closed connection with the server");
                 System.exit(0);
-            }catch(InterruptedException e){
-
+            } catch (InterruptedException e) {
+                System.err.println("Thread sleep error");
+                System.exit(1);
             }
         }
     }
