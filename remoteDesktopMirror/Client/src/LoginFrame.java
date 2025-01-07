@@ -53,6 +53,7 @@ public class LoginFrame {
         this._loginFrame.setVisible(true);
     }
 
+    // initialize the labels of the frame
     public void initLabels(){
         this._ipLabel = new Label("Server IP:");
         this._portLabel = new Label("Server port:");
@@ -82,6 +83,7 @@ public class LoginFrame {
         this._loginFrame.add(this._connectionLabel);
     }
 
+    // initialize the textfields of the frame
     public void initTextFields(){
         this._ipTextField = new TextField();
         this._portTextField = new TextField();
@@ -93,6 +95,7 @@ public class LoginFrame {
         this._loginFrame.add(this._portTextField);
     }
 
+    // initialize the button of the frame
     public void initButton(){
         this._confirmButton = new Button("Confirm");
         this._confirmButton.setBounds(40, 150, 100, 20);
@@ -104,6 +107,7 @@ public class LoginFrame {
                 boolean isValidPort = false;
                 boolean isValidIP = false;
 
+                // missing ip text
                 if(_ipTextField.getText().trim().isEmpty()){
                     _ipErrorLabel.setText("Missing value");
                     _connectionLabel.setText("");
@@ -114,12 +118,15 @@ public class LoginFrame {
                     _ipErrorLabel.setText("");
                     
                     isValidIP = isValidIPAdress(_ipTextField.getText());
+
+                    // not a valid ip value
                     if(!isValidIP){
                         _ipErrorLabel.setText("Not a valid IP address");
                         _connectionLabel.setText("");
                     }
                 }
 
+                // missing port value
                 if(_portTextField.getText().trim().isEmpty()){
                     _portErrorLabel.setText("Missing value");
                     _connectionLabel.setText("");
@@ -132,11 +139,14 @@ public class LoginFrame {
                     isValidPort = isValidPort(_portTextField.getText());
 
                     if(!isValidPort){
+
+                        //not a valid port value
                         _portErrorLabel.setText("Not a valid port");
                         _connectionLabel.setText("");
                     }
                 }
 
+                // valid ip and port values
                 if(isValidIP && isValidPort){
                     _ipValue = _ipTextField.getText();
                     _portValue = Integer.parseInt(_portTextField.getText());
@@ -144,14 +154,17 @@ public class LoginFrame {
                     _client.setIP(_ipValue);
                     _client.setPort(_portValue);
 
+                    // connecting to the server with the given ip an port values
                     _client.connectToServer();
                     _connectionLabel.setText("Trying to connect to the server");
 
+                    // connected to the server
                     if(_client._isConnected()){
                         _connectionLabel.setText("");
                         _client.work();
                     }
 
+                    // couldn't connect to the server
                     else{
                         _connectionLabel.setText("Can't connect to the server");
                     }
@@ -164,6 +177,7 @@ public class LoginFrame {
         this._loginFrame.add(this._confirmButton);
     }
 
+    // check if a given text represents a valid ipv4 value
     public boolean isValidIPAdress(String text){
         String IPV4_REGEX = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
         Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
@@ -171,6 +185,7 @@ public class LoginFrame {
         return IPV4_PATTERN.matcher(text).matches();
     }
 
+    // check if a given text is a valid port value
     public boolean isValidPort(String text){
         try{
             int port = Integer.parseInt(text);
