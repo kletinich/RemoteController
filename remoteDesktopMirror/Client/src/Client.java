@@ -22,6 +22,8 @@ public class Client {
     private DataOutputStream _out;                      // Sender of data to server
     private DataInputStream _in;                        // Receiver of server data
 
+    private LoginFrame _loginFrame;                     // Login frame
+
     private ScreenCapturer _screenCapturer;             // Screenshot of the screen
     private ServerEventsExecuter _serverEventsExecuter; // Executer of server commands
 
@@ -35,6 +37,8 @@ public class Client {
 
         this._screenCapturer = new ScreenCapturer();
         this._serverEventsExecuter = new ServerEventsExecuter();
+
+        this._loginFrame = new LoginFrame(this);
     }
 
     // connect to server
@@ -48,13 +52,14 @@ public class Client {
 
         }catch(IOException e){
             System.err.println("Can't connect to server");
-            System.exit(1);
+            //System.exit(1);
         }
     }
 
     // communicate with the server
     public void work(){
-        
+        this._loginFrame.toggleFrameVisibility(false);
+
         while(true){
             try {
                 Thread.sleep(50);
@@ -97,5 +102,13 @@ public class Client {
                 System.exit(1);
             }
         }
+    }
+
+    public void setIP(String ip){
+        this._ip = ip;
+    }
+
+    public void setPort(int port){
+        this._port = port;
     }
 }
