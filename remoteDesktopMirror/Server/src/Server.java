@@ -37,6 +37,7 @@ public class Server {
         this._frameHandler = new FrameHandler(this);
     }
 
+    // start the server and listen to a client
     public void startServer(){
         try {
             InetAddress bindAddress = InetAddress.getByName(this._ip);
@@ -63,6 +64,7 @@ public class Server {
         }
     }
 
+    // close the server socket
     public void closeServer(){
         try {
             this._server.close();
@@ -76,6 +78,7 @@ public class Server {
         }
     }
 
+    // communicate with the client
     public void work(){
         while(true){
             try {
@@ -90,6 +93,7 @@ public class Server {
                 // repaint the frame with the new captured screen
                 this._frameHandler.repaint(screenCapture);
 
+                // send mouse and keyboard data to the client
                 this._out.writeDouble(this._frameHandler.getMousePropotionalPosition().get("x"));
                 Thread.sleep(20);
                 this._out.writeDouble(this._frameHandler.getMousePropotionalPosition().get("y"));

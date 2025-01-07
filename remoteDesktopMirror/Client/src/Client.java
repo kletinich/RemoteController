@@ -70,6 +70,7 @@ public class Client {
                 this._out.writeInt(imageBytes.length);
                 this._out.write(imageBytes);
 
+                // receive mouse and keyboard data from the server
                 double mouseRelativeX = this._in.readDouble();  // relative x position of the mouse
                 double mouseRelativeY = this._in.readDouble();  // relative y position of the mouse
                 boolean mousePress = this._in.readBoolean();    // is mouse pressed in the server side       

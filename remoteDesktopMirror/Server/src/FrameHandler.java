@@ -8,7 +8,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.util.TreeMap;
 
-
+// A frame displayer class to display the screenview of the client
 public class FrameHandler {
     private Frame _frame;
     private Canvas _canvas;
@@ -20,11 +20,11 @@ public class FrameHandler {
     private int _keyCode;
     TreeMap<String, Double> _mousePropotionalPosition;
 
-    private boolean _press;
-    private boolean _click;
-    private boolean _inFrameBounds;
+    private boolean _press;                                 // is mouse key pressed
+    private boolean _click;                                 // is mouse key clicked
+    private boolean _inFrameBounds;                         // is mouse inside the bounds of the frame
 
-    private boolean _keyPressed;
+    private boolean _keyPressed;                            // is keyboard key pressed
 
     public FrameHandler(Server server){
         this._server = server;
@@ -55,7 +55,10 @@ public class FrameHandler {
         });
     }
 
+    // initiating the canvas that displays the screen
     private void initCanvas(){
+
+        // initialize the canvas size inside the frame
         this._canvas = new Canvas(){
             BufferedImage screen;
 
@@ -72,6 +75,7 @@ public class FrameHandler {
             }
         };
 
+        // mouse events
         this._canvas.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 _mousePropotionalPosition = calculatePropotionalPosition(e.getX(), e.getY());
@@ -102,6 +106,7 @@ public class FrameHandler {
             }
         });
 
+        // keyboard events
         this._canvas.addKeyListener(new KeyListener() {
 
             @Override
@@ -126,6 +131,7 @@ public class FrameHandler {
         this._frame.add(this._canvas);
     }
 
+    // repaint the canvas with the updated screen image of the client
     public void repaint(BufferedImage updatedScreenCapture){
         this._screenCapture = updatedScreenCapture;
         this._canvas.repaint();
