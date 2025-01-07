@@ -106,6 +106,7 @@ public class LoginFrame {
 
                 if(_ipTextField.getText().trim().isEmpty()){
                     _ipErrorLabel.setText("Missing value");
+                    _connectionLabel.setText("");
                     isValidIP = false;
                 }
 
@@ -115,11 +116,13 @@ public class LoginFrame {
                     isValidIP = isValidIPAdress(_ipTextField.getText());
                     if(!isValidIP){
                         _ipErrorLabel.setText("Not a valid IP address");
+                        _connectionLabel.setText("");
                     }
                 }
 
                 if(_portTextField.getText().trim().isEmpty()){
                     _portErrorLabel.setText("Missing value");
+                    _connectionLabel.setText("");
                     isValidPort = false;
                 }
 
@@ -130,6 +133,7 @@ public class LoginFrame {
 
                     if(!isValidPort){
                         _portErrorLabel.setText("Not a valid port");
+                        _connectionLabel.setText("");
                     }
                 }
 
@@ -183,5 +187,9 @@ public class LoginFrame {
 
     public void toggleFrameVisibility(boolean visible){
         this._loginFrame.setVisible(visible);
+    }
+
+    public void setConnectionLabelText(String text){
+        this._connectionLabel.setText(text);
     }
 }

@@ -105,6 +105,7 @@ public class Client {
             } catch (IOException e) {
                 System.out.println("Closed connection with the server");
                 this._loginFrame.toggleFrameVisibility(true);
+                this._loginFrame.setConnectionLabelText("Disconnected from the server");
                 this._isConnected = false;
 
             } catch (InterruptedException e) {
