@@ -7,6 +7,9 @@ import java.util.regex.Pattern;
 
 // A frame displayer of a login option to the server
 public class LoginFrame {
+    final int MIN_PORT_VALUE = 1;
+    final int MAX_PORT_VALUE = 65535;
+
     private Frame _loginFrame;
 
     private Label _ipLabel;
@@ -190,7 +193,7 @@ public class LoginFrame {
         try{
             int port = Integer.parseInt(text);
 
-            if(port >= 0 && port <= 65535){
+            if(port > MIN_PORT_VALUE && port <= MAX_PORT_VALUE){
                 return true;
             }
 

@@ -15,7 +15,6 @@ public class Server {
     public static String DEFAULT_IP = "127.0.0.1";
     public static int DEFAULT_PORT = 8080;
 
-    private String _ip;
     private int _port;
 
     private ServerSocket _server;
@@ -27,11 +26,10 @@ public class Server {
     FrameHandler _frameHandler;
 
     public Server(){
-        this(DEFAULT_IP, DEFAULT_PORT);
+        this(DEFAULT_PORT);
     }
 
-    public Server(String ip, int port){
-        this._ip = ip;
+    public Server(int port){
         this._port = port;
 
         this._frameHandler = new FrameHandler(this);
@@ -40,7 +38,7 @@ public class Server {
     // start the server and listen to a client
     public void startServer(){
         try {
-            InetAddress bindAddress = InetAddress.getByName(this._ip);
+            InetAddress bindAddress = InetAddress.getLocalHost();
             this._server = new ServerSocket(this._port, 1, bindAddress);
 
             System.out.println("Server started");
